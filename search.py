@@ -88,15 +88,15 @@ def depthFirstSearch(problem: SearchProblem):
     """
     "*** YOUR CODE HERE ***"
     from util import Stack
-    DFS_Stack = Stack()
+    dfsStack = Stack()
     startState = problem.getStartState()
-    DFS_Stack.push(startState)
+    dfsStack.push(startState)
     visited = set()
     traceState = dict()
     traceDirection = dict()
     goalState =  None
-    while DFS_Stack.isEmpty() is False:
-        currentState = DFS_Stack.pop()
+    while dfsStack.isEmpty() is False:
+        currentState = dfsStack.pop()
         if (problem.isGoalState(currentState)):  
             goalState = currentState
             break
@@ -104,12 +104,12 @@ def depthFirstSearch(problem: SearchProblem):
             continue
         visited.add(currentState)
         successors = problem.getSuccessors(currentState)
-        for _ in successors:
-            successor, action, stepCost = _
+        for tripleState in successors:
+            successor, action, stepCost = tripleState
             if (successor not in visited):
                 traceState[successor] = currentState
                 traceDirection[successor] = action
-                DFS_Stack.push(successor)
+                dfsStack.push(successor)
     actionList =[]
     currentState = goalState
     while currentState != startState:
@@ -123,7 +123,38 @@ def depthFirstSearch(problem: SearchProblem):
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import Queue
+    bfsQueue = Queue()
+    visited = set()
+    traceState = dict()
+    traceDirection = dict()
+    goalState =  None
+    startState = problem.getStartState()
+    bfsQueue.push(startState)
+    visited.add(startState)
+    while bfsQueue.isEmpty() is False:
+        currentState = bfsQueue.pop()
+        if (problem.isGoalState(currentState)):
+            goalState = currentState
+            break
+        successors = problem.getSuccessors(currentState)
+        for tripleState in successors:
+            successor, action, stepCost = tripleState
+            if (successor not in visited):
+                visited.add(successor)
+                traceState[successor] = currentState
+                traceDirection[successor] = action
+                bfsQueue.push(successor)
+    
+    actionList =[]
+    currentState = goalState
+    while currentState != startState:
+        actionList.append(traceDirection[currentState])
+        currentState = traceState[currentState]
+        
+    actionList.reverse()
+    return actionList
+
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
