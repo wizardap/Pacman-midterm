@@ -87,7 +87,38 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import Stack
+    DFS_Stack = Stack()
+    startState = problem.getStartState()
+    DFS_Stack.push(startState)
+    visited = set()
+    traceState = dict()
+    traceDirection = dict()
+    goalState =  None
+    while DFS_Stack.isEmpty() is False:
+        currentState = DFS_Stack.pop()
+        if (problem.isGoalState(currentState)):  
+            goalState = currentState
+            break
+        if (currentState in visited):
+            continue
+        visited.add(currentState)
+        successors = problem.getSuccessors(currentState)
+        for _ in successors:
+            successor, action, stepCost = _
+            if (successor not in visited):
+                traceState[successor] = currentState
+                traceDirection[successor] = action
+                DFS_Stack.push(successor)
+    actionList =[]
+    currentState = goalState
+    while currentState != startState:
+        actionList.append(traceDirection[currentState])
+        currentState = traceState[currentState]
+        
+    actionList.reverse()
+    return actionList
+
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
@@ -102,7 +133,7 @@ def uniformCostSearch(problem: SearchProblem):
 def nullHeuristic(state, problem=None):
     """
     A heuristic function estimates the cost from the current state to the nearest
-    goal in the provided SearchProblem.  This heuristic is trivial.
+    goal in the provided problem.  This heuristic is trivial.
     """
     return 0
 
