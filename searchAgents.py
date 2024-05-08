@@ -296,6 +296,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
+        return (self.startingPosition , ())
         util.raiseNotDefined()
 
     def isGoalState(self, state: Any):
@@ -303,6 +304,8 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
+        
+        return len(state[1])==len(self.corners)
         util.raiseNotDefined()
 
     def getSuccessors(self, state: Any):
@@ -315,7 +318,7 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-
+       
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
@@ -326,6 +329,19 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+            x, y = state[0]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if not self.walls[nextx][nexty]:
+                corner_list = state[1]
+                if (nextx, nexty) in self.corners:
+                    print("OK")
+                    if(nextx,nexty) not in corner_list:
+                        corner_list+=(nextx, nexty)
+                        print(len(corner_list))
+                    
+                next_state = ((nextx, nexty), corner_list)
+                successors.append((next_state, action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
