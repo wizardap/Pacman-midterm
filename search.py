@@ -138,6 +138,7 @@ def breadthFirstSearch(problem: SearchProblem):
             goalState = currentState
             break
         successors = problem.getSuccessors(currentState)
+        print(type(successors))
         for tripleState in successors:
             successor, action, stepCost = tripleState
             if (successor not in visited):
@@ -159,6 +160,25 @@ def breadthFirstSearch(problem: SearchProblem):
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    from util import PriorityQueue
+    stateVisit = PriorityQueue()
+    visited = []
+    actions = []
+    actionsCurrent = PriorityQueue()
+    state = problem.getStartState()
+
+    while not problem.isGoalState(state):
+        if state not in visited:
+            visited.append(state)
+            for next_state, action, cost in problem.getSuccessors(state):
+                action = actions + [action]
+                cost= problem.getCostOfActions(action)
+                actionsCurrent.push(action, cost)
+                stateVisit.push(next_state, cost)
+        state = stateVisit.pop()
+        actions = actionsCurrent.pop()
+
+    return actions
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
@@ -171,6 +191,25 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    from util import PriorityQueue
+    stateVisit = PriorityQueue()
+    visited = []
+    actions = []
+    actionsCurrent = PriorityQueue()
+    state = problem.getStartState()
+
+    while not problem.isGoalState(state):
+        if state not in visited:
+            visited.append(state)
+            for nextState, action, cost in problem.getSuccessors(state):
+                action = actions + [action]
+                costState = problem.getCostOfActions(action)
+                actionsCurrent.push(action, costState + heuristic(nextState, problem))
+                stateVisit.push(nextState, costState + heuristic(nextState, problem))
+        state = stateVisit.pop()
+        actions = actionsCurrent.pop()
+
+    return actions
     util.raiseNotDefined()
 
 
