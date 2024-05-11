@@ -138,7 +138,7 @@ def breadthFirstSearch(problem: SearchProblem):
             goalState = currentState
             break
         successors = problem.getSuccessors(currentState)
-        print(type(successors))
+        # print(type(successors))
         for tripleState in successors:
             successor, action, stepCost = tripleState
             if (successor not in visited):

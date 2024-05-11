@@ -422,6 +422,7 @@ class FoodSearchProblem:
 
     def isGoalState(self, state):
         return state[1].count() == 0
+    
 
     def getSuccessors(self, state):
         "Returns successor states, the actions they require, and a cost of 1."
@@ -456,7 +457,7 @@ class AStarFoodSearchAgent(SearchAgent):
     def __init__(self):
         self.searchFunction = lambda prob: search.aStarSearch(prob, foodHeuristic)
         self.searchType = FoodSearchProblem
-
+import copy
 def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     """
     Your heuristic for the FoodSearchProblem goes here.
@@ -486,8 +487,56 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
+    # print(foodGrid.asList())
+    # print(position)
+    # print(problem.walls)
+    # wall = problem.walls
+    food_list = foodGrid.asList()
+    if len(food_list) == 0:
+        return 0
+    def dist(p1,p2):
+        return abs(p1[0]-p2[0]) + abs(p1[1]-p2[1])
+    def get_farthest_point(pos,food_list):
+        if len(food_list) == 0:
+            return
+        farthest = food_list[0]
+        dist_farthest = dist(pos,food_list[0])
+        for i in range(1,len(food_list)):
+            distance = dist(pos,food_list[i])
+            if distance > dist_farthest:
+                dist_farthest = distance
+                farthest = food_list[i]
+        return farthest 
+    def get_closest_point(pos,food_list):
+        if len(food_list) == 0:
+            return
+        closest = food_list[0]
+        dist_closest = dist(pos,food_list[0])
+        for i in range(1,len(food_list)):
+            distance = dist(pos,food_list[i])
+            if distance < dist_closest:
+                dist_closest = distance
+                closest = food_list[i]
+        return closest  
+
+    
+    
+    closest = get_closest_point(position,food_list)
+    farthest = get_farthest_point(position,food_list)
+    d = mazeDistance(position,closest,problem.startingGameState)
     "*** YOUR CODE HERE ***"
-    return 0
+    # print(min_dist)
+    left_point = 0
+    for (x,y) in food_list:
+        flag = 0
+        if x!=position[0] and x!=closest[0]:
+            left_point += 1
+            flag = 1
+        if flag == 0:
+            if y!=position[1] and y != closest[1]:
+                left_point+=1
+    
+    return d+left_point
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -516,7 +565,7 @@ class ClosestDotSearchAgent(SearchAgent):
         food = gameState.getFood()
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
-
+        return search.breadthFirstSearch(problem=problem)
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
 
@@ -552,7 +601,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         complete the problem definition.
         """
         x,y = state
-
+        return (x,y) in self.food.asList()
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
 
