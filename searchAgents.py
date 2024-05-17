@@ -42,6 +42,7 @@ import util
 import time
 import search
 import pacman
+import copy
 
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
@@ -374,7 +375,6 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
     "*** YOUR CODE HERE ***"
     currentPoint = state[0]
     visitedCorners = state[1]
@@ -457,7 +457,6 @@ class AStarFoodSearchAgent(SearchAgent):
     def __init__(self):
         self.searchFunction = lambda prob: search.aStarSearch(prob, foodHeuristic)
         self.searchType = FoodSearchProblem
-import copy
 def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     """
     Your heuristic for the FoodSearchProblem goes here.
@@ -487,10 +486,6 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    # print(foodGrid.asList())
-    # print(position)
-    # print(problem.walls)
-    # wall = problem.walls
     food_list = foodGrid.asList()
     if len(food_list) == 0:
         return 0
@@ -524,8 +519,6 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     closest = get_closest_point(position,food_list)
     farthest = get_farthest_point(position,food_list)
     d = mazeDistance(position,closest,problem.startingGameState)
-    "*** YOUR CODE HERE ***"
-    # print(min_dist)
     left_point = 0
     for (x,y) in food_list:
         flag = 0
@@ -566,8 +559,6 @@ class ClosestDotSearchAgent(SearchAgent):
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
         return search.breadthFirstSearch(problem=problem)
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -602,8 +593,6 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         """
         x,y = state
         return (x,y) in self.food.asList()
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
 
 def mazeDistance(point1: Tuple[int, int], point2: Tuple[int, int], gameState: pacman.GameState) -> int:
     """
