@@ -138,7 +138,6 @@ def breadthFirstSearch(problem: SearchProblem):
             goalState = currentState
             break
         successors = problem.getSuccessors(currentState)
-        # print(type(successors))
         for tripleState in successors:
             successor, action, stepCost = tripleState
             if (successor not in visited):
@@ -179,7 +178,6 @@ def uniformCostSearch(problem: SearchProblem):
         actions = actionsCurrent.pop()
 
     return actions
-    util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
@@ -210,7 +208,6 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
         actions = actionsCurrent.pop()
 
     return actions
-    util.raiseNotDefined()
 
 
 # Abbreviations
